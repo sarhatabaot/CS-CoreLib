@@ -173,9 +173,9 @@
             <version>1.6.9.5-U0.2.2</version>
         </dependency>
         <dependency>
-            <groupId>com.github.LlmDl</groupId>
+            <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>2aeeb30903</version>
+            <version>67568d413b</version>
         </dependency>
         <dependency>
             <groupId>com.github.fubira</groupId>
