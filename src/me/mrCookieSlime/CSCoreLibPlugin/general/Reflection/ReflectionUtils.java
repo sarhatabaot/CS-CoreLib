@@ -77,7 +77,7 @@ public class ReflectionUtils {
 	/**
 	 * Returns the Field of a Class
 	 *
-	 * @param  c The Class conating this Field
+	 * @param  c The Class containing this Field
 	 * @param  field The name of the Field you are looking for
 	 * @return      The found Field
 	 *
@@ -101,6 +101,19 @@ public class ReflectionUtils {
 	}
 
 	/**
+	 * Modifies a Field in a Class
+	 *
+	 * @param  c     The Class containing the Field
+	 * @param  field The Name of that Field
+	 * @param  value The Value for that Field
+	 */
+	public static void setFieldValueByClass(Class<?> c,String field, Object value) throws Exception {
+		Field f = getField(c, field);
+		f.setAccessible(true);
+		f.set(c, value);
+	}
+
+	/**
 	 * Returns the Value of a Field in an Object
 	 *
 	 * @param  object The Object containing the Field
@@ -114,8 +127,21 @@ public class ReflectionUtils {
 	}
 
 	/**
+	 * Returns the Value of a Field in a Class
+	 *
+	 * @param  c     The class containing the Field
+	 * @param  field The Name of that Field
+	 * @return      The Value of a Field
+	 */
+	public static Object getFieldValueByClass(Class<?> c, String field) throws Exception{
+		Field f = getField(c, field);
+		f.setAccessible(true);
+		return f.get(c);
+	}
+
+	/**
 	 * Converts the Classes to a Primitive Type Array
-	 * in order to be used as paramaters
+	 * in order to be used as parameters
 	 *
 	 * @param  classes The Types you want to convert
 	 * @return      An Array of primitive Types
@@ -132,7 +158,7 @@ public class ReflectionUtils {
 	/**
 	 * Converts the Classes of the specified Objects
 	 *  to a Primitive Type Array
-	 * in order to be used as paramaters
+	 * in order to be used as parameters
 	 *
 	 * @param  objects The Types you want to convert
 	 * @return      An Array of primitive Types

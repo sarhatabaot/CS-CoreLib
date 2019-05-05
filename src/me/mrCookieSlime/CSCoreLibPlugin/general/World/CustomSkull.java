@@ -1,6 +1,7 @@
 package me.mrCookieSlime.CSCoreLibPlugin.general.World;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -11,6 +12,8 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.Reflection.CraftObject;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Reflection.PackageName;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Reflection.ReflectionUtils;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -125,7 +128,7 @@ public class CustomSkull {
 	 *
 	 * @param  texture A Base64 String representing the Texture
 	 * @return      The modified ItemStack
-	 */ 
+	 */
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItem(String texture) throws Exception {
 		Object profile = createProfile(texture);
@@ -198,10 +201,10 @@ public class CustomSkull {
 		if (tile == null) return "";
 
 		Object profile;
-		if (ReflectionUtils.isVersion("v1_14_"))
-			profile = ReflectionUtils.getFieldValue(
-				ReflectionUtils.getClass(PackageName.NMS, "TileEntitySkull"), "gameProfile"
-			);
+		if (ReflectionUtils.isVersion("v1_14_")){
+			TEMP_getClassFields(ReflectionUtils.getClass(PackageName.NMS, "TileEntitySkull"));
+			profile = ReflectionUtils.getFieldValueByClass(ReflectionUtils.getClass(PackageName.NMS, "TileEntitySkull"), "gameProfile");
+		}
 		else
 			profile = getgameprofile.invoke(tile);
 		
@@ -215,6 +218,44 @@ public class CustomSkull {
 		return "";
 	}
 
+	private static void TEMP_getObjectClassFields(Object object){
+		System.out.println(object.getClass().getName());
+		TEMP_getClassFields(object.getClass());
+	}
+
+	private static void TEMP_getClassFields(Class<?> map_class){
+		Object object = map_class;
+		StringBuilder builder = new StringBuilder();
+		builder.append("fields:");
+		for(Field field: object.getClass().getFields()){
+			builder.append(field.getName());
+			builder.append("=");
+			builder.append(field.getType().getSimpleName());
+			builder.append(",");
+		}
+		builder.append("|declared fields:");
+		for(Field field: object.getClass().getDeclaredFields()){
+			builder.append(field.getName());
+			builder.append("=");
+			builder.append(field.getType().getSimpleName());
+			builder.append(",");
+		}
+		builder.append("|methods:");
+		for(Method method: map_class.getMethods()){
+			builder.append(method.getName());
+			builder.append("=");
+			builder.append(method.getReturnType().getSimpleName());
+			builder.append(",");
+		}
+		builder.append("|declared methods:");
+		for(Method method: map_class.getDeclaredMethods()){
+			builder.append(method.getName());
+			builder.append("=");
+			builder.append(method.getReturnType().getSimpleName());
+			builder.append(",");
+		}
+		System.out.println(builder.toString());
+	}
 	/**
 	 * Returns the Skull Owner of that Skull
 	 *
