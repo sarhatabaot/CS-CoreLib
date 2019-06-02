@@ -11,11 +11,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+//import org.json.simple.JSONArray;
+//import org.json.simple.JSONObject;
+//import org.json.simple.JSONValue;
 
 public class Updater {
 	
@@ -98,8 +100,8 @@ public class Updater {
 	            connection.setDoOutput(true);
 
 	            final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	            final JSONArray array = (JSONArray) JSONValue.parse(reader.readLine());
-	            if (array.isEmpty()) {
+	            final JsonArray array = (JsonArray) JSONValue.parse(reader.readLine());
+	            if (array.isJsonNull()) {
 	            	System.err.println("[" + plugin.getName() + " - Updater] Could not connect to BukkitDev, is it down?");
 					try {
 						thread.join();
@@ -108,8 +110,8 @@ public class Updater {
 					}
 		            return false;
 	            }
-	            download = traceURL(((String) ((JSONObject) array.get(array.size() - 1)).get("downloadUrl")).replace("https:", "http:"));
-	            version = (String) ((JSONObject) array.get(array.size() - 1)).get("name");
+	            download = traceURL(((String) ((JsonObject) array.get(array.size() - 1)).get("downloadUrl")).replace("https:", "http:"));
+	            version = (String) ((JsonObject) array.get(array.size() - 1)).get("name");
 	            version = version.toLowerCase();
 	            for (char blocked: blacklist) {
 	            	version = version.replace(String.valueOf(blocked), "");
